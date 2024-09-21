@@ -5,6 +5,11 @@ import pydeck as pdk
 # 데이터 로드
 data = pd.read_csv('data.csv')
 
+del data['latitude']
+del data['longitude']
+del data['Latitude']
+del data['Longitude']
+
 st.title("상권 분석 지도 시각화")
 
 # 광역별 필터링
@@ -15,17 +20,19 @@ filtered_data = data[data['광역'] == selected_region]
 selected_category = st.selectbox("업종 대분류를 선택하세요", filtered_data['산업분류_표준산업분류중분류'].unique())
 filtered_data = filtered_data[filtered_data['산업분류_표준산업분류중분류'] == selected_category]
 
-st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
+# 열 이름을 Streamlit이 인식할 수 있는 이름으로 변경
+filtered_data = filtered_data.rename(columns={'좌표_위도': 'latitude', '좌표_경도': 'longitude'})
 
+st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
 # 지도 시각화
 if not filtered_data.empty:
-    st.map(filtered_data[['좌표_위도', '좌표_경도']])
+    st.map(filtered_data[['latitude', 'longitude']])
 
     # pydeck을 사용하여 마커와 팝업을 포함한 지도 생성
     layer = pdk.Layer(
         "ScatterplotLayer",
         filtered_data,
-        get_position='[좌표_경도, 좌표_위도]',
+        get_position='[longitude, latitude]',
         get_radius=100,
         get_color=[255, 0, 0, 160],
         pickable=True,
@@ -33,8 +40,8 @@ if not filtered_data.empty:
 
     # 초기 뷰 설정
     initial_view = pdk.ViewState(
-        latitude=filtered_data['좌표_위도'].mean(),
-        longitude=filtered_data['좌표_경도'].mean(),
+        latitude=filtered_data['latitude'].mean(),
+        longitude=filtered_data['longitude'].mean(),
         zoom=10,
         pitch=50,
     )
