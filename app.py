@@ -7,8 +7,6 @@ data = pd.read_csv('data.csv')
 
 del data['latitude']
 del data['longitude']
-del data['Latitude']
-del data['Longitude']
 
 st.title("상권 분석 지도 시각화")
 
