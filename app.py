@@ -2,8 +2,8 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 
-# Streamlit 설정: 다크모드와 여백 없는 모드
-st.set_page_config(layout="wide", initial_sidebar_state="collapsed", theme="dark")
+# Streamlit 설정: 여백 없는 모드, 사이드바 상태 설정
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
 
 # 데이터 로드
 data = pd.read_csv('data.csv')
