@@ -21,7 +21,7 @@ selected_category = st.selectbox("업종 대분류를 선택하세요", filtered
 filtered_data = filtered_data[filtered_data['산업분류_표준산업분류중분류'] == selected_category]
 
 # 열 이름을 Streamlit이 인식할 수 있는 이름으로 변경
-filtered_data = filtered_data.rename(columns={'좌표_위도': 'latitude', '좌표_경도': 'longitude'})
+filtered_data = filtered_data.rename(columns={'Latitude': 'latitude', 'Longitude': 'longitude'})
 
 st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
 # 지도 시각화
