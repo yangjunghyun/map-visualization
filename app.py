@@ -12,7 +12,7 @@ selected_region = st.selectbox("광역을 선택하세요", data['광역'].uniqu
 filtered_data = data[data['광역'] == selected_region]
 
 # 업종별 필터링
-selected_category = st.selectbox("업종 대분류를 선택하세요", filtered_data['업종대분류'].unique())
+selected_category = st.selectbox("업종 대분류를 선택하세요", filtered_data['업종대분류_임시'].unique())
 filtered_data = filtered_data[filtered_data['업종대분류_임시'] == selected_category]
 
 st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
