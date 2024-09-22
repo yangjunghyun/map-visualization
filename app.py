@@ -25,6 +25,8 @@ filtered_data = filtered_data[filtered_data['산업분류_표준산업분류중�
 # 열 이름을 Streamlit이 인식할 수 있는 이름으로 변경
 filtered_data = filtered_data.rename(columns={'Latitude': 'latitude', 'Longitude': 'longitude'})
 
+filtered_data.dropna(subset=['latitude'],inplace=True)
+
 st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
 
 # 지도 시각화 (pydeck을 사용한 지도만 표시)
