@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pydeck as pdk
+import plotly.express as px
 
 # Streamlit 설정: 여백 없는 모드, 사이드바 상태 설정
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
@@ -67,3 +68,23 @@ else:
 
     # 상세 정보 테이블로 출력
     st.write(filtered_data[['사업체명', '대표자명', '광역', '제품_주생산품']])
+
+# **광역만 선택했을 때 업종별 분포 그래프 추가**
+if selected_region and not filtered_data.empty:
+    st.subheader(f"{selected_region}의 업종별 분포")
+    
+    # 업종별 사업체 수 계산
+    industry_count = data[data['광역'] == selected_region]['산업분류_표준산업분류중분류'].value_counts().reset_index()
+    industry_count.columns = ['업종', '사업체 수']
+
+    # Plotly를 사용한 막대 그래프 생성
+    fig = px.bar(industry_count, 
+                 x='업종', 
+                 y='사업체 수', 
+                 color='업종', 
+                 title=f"{selected_region}의 업종별 사업체 수",
+                 labels={'업종': '업종 대분류', '사업체 수': '사업체 수'},
+                 height=500)
+    
+    # 그래프 시각화
+    st.plotly_chart(fig)
