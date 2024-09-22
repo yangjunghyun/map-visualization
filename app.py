@@ -25,12 +25,15 @@ filtered_data = filtered_data[filtered_data['산업분류_표준산업분류중�
 # 열 이름을 Streamlit이 인식할 수 있는 이름으로 변경
 filtered_data = filtered_data.rename(columns={'Latitude': 'latitude', 'Longitude': 'longitude'})
 
-filtered_data.dropna(subset=['latitude'],inplace=True)
+# 위도/경도 값이 NaN인 경우를 제거
+filtered_data = filtered_data.dropna(subset=['latitude', 'longitude'])
 
-st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
+# NaN 값이 발생했을 때 경고 메시지를 출력
+if filtered_data.empty:
+    st.warning("필터링된 데이터에 위도 또는 경도 값이 없습니다.")
+else:
+    st.subheader(f"{selected_region}의 {selected_category} 업종 분석")
 
-# 지도 시각화 (pydeck을 사용한 지도만 표시)
-if not filtered_data.empty:
     # pydeck을 사용하여 마커와 팝업을 포함한 지도 생성
     layer = pdk.Layer(
         "ScatterplotLayer",
@@ -61,8 +64,6 @@ if not filtered_data.empty:
     )
 
     st.pydeck_chart(deck)
-else:
-    st.write("선택한 필터에 해당하는 데이터가 없습니다.")
 
-# 상세 정보 테이블로 출력
-st.write(filtered_data[['사업체명', '대표자명', '광역', '제품_주생산품']])
+    # 상세 정보 테이블로 출력
+    st.write(filtered_data[['사업체명', '대표자명', '광역', '제품_주생산품']])
