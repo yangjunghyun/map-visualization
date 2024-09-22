@@ -66,25 +66,30 @@ else:
 
     st.pydeck_chart(deck)
 
-    # 상세 정보 테이블로 출력
-    st.write(filtered_data[['사업체명', '대표자명', '광역', '제품_주생산품']])
-
-# **광역만 선택했을 때 업종별 분포 그래프 추가**
-if selected_region and not filtered_data.empty:
-    st.subheader(f"{selected_region}의 업종별 분포")
+    # 화면 구성을 위한 열 생성 (왼쪽과 오른쪽)
+    col1, col2 = st.columns([1, 1.5])  # col1은 테이블, col2는 그래프
     
-    # 업종별 사업체 수 계산
-    industry_count = data[data['광역'] == selected_region]['산업분류_표준산업분류중분류'].value_counts().reset_index()
-    industry_count.columns = ['업종', '사업체 수']
-
-    # Plotly를 사용한 막대 그래프 생성
-    fig = px.bar(industry_count, 
-                 x='업종', 
-                 y='사업체 수', 
-                 color='업종', 
-                 title=f"{selected_region}의 업종별 사업체 수",
-                 labels={'업종': '업종 대분류', '사업체 수': '사업체 수'},
-                 height=500)
+    # **왼쪽 열에 테이블 출력**
+    with col1:
+        st.subheader("사업체 정보")
+        st.write(filtered_data[['사업체명', '대표자명', '제품_주생산품']])
     
-    # 그래프 시각화
-    st.plotly_chart(fig)
+    # **오른쪽 열에 업종별 분포 그래프 추가**
+    with col2:
+        st.subheader(f"{selected_region}의 업종별 분포")
+        
+        # 업종별 사업체 수 계산
+        industry_count = data[data['광역'] == selected_region]['산업분류_표준산업분류중분류'].value_counts().reset_index()
+        industry_count.columns = ['업종', '사업체 수']
+
+        # Plotly를 사용한 막대 그래프 생성
+        fig = px.bar(industry_count, 
+                     x='업종', 
+                     y='사업체 수', 
+                     color='업종', 
+                     title=f"{selected_region}의 업종별 사업체 수",
+                     labels={'업종': '업종 대분류', '사업체 수': '사업체 수'},
+                     height=500)
+        
+        # 그래프 시각화
+        st.plotly_chart(fig)
